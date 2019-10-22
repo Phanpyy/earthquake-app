@@ -54,15 +54,15 @@ const App: React.FC = () => {
             let sorted: Earthquake[];
             if (filterOption !== FILTER_NONE && inputFilterNumber) {
                 switch (filterOption) {
-                    case FILTER_TIME:
-                        sorted = fetchEarthquakes.sort((ea1, ea2) => ea2.properties.time - ea1.properties.time);
-                        fetchEarthquakes = sorted.slice(0, inputFilterNumber);
-                        break;
+                case FILTER_TIME:
+                    sorted = fetchEarthquakes.sort((ea1, ea2) => ea2.properties.time - ea1.properties.time);
+                    fetchEarthquakes = sorted.slice(0, inputFilterNumber);
+                    break;
 
-                    case FILTER_MAGNITUDE:
-                        sorted = fetchEarthquakes.sort((ea1, ea2) => ea2.properties.mag - ea1.properties.mag);
-                        fetchEarthquakes = sorted.slice(0, inputFilterNumber);
-                        break;
+                case FILTER_MAGNITUDE:
+                    sorted = fetchEarthquakes.sort((ea1, ea2) => ea2.properties.mag - ea1.properties.mag);
+                    fetchEarthquakes = sorted.slice(0, inputFilterNumber);
+                    break;
                 }
             }
 
