@@ -20,8 +20,22 @@
     "@typescript-eslint"
   ],
   "rules": {
-    "semi": "error",
     "quotes": ["error", "single"],
-    "jsx-quotes": ["error", "prefer-single"]
+    "jsx-quotes": ["error", "prefer-single"],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "tabWidth": 4,
+        "ignoreUrls": true,
+        "ignoreTemplateLiterals": true
+      }
+    ]
+  },
+  "globals": {
+    "setInterval": true,
+    "clearInterval": true,
+    "document": true,
+    "it": true
   }
 }
