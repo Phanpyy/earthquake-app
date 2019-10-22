@@ -14,7 +14,7 @@ interface Props {
  */
 export const CheckboxAndLabel: React.FC<Props> = (props: Props) => (
     <div>
-        <input type='checkbox' checked={props.checked} onChange={(): void => props.onChange(!props.checked)} />
-        <label>{props.label}</label>
+        <input type='checkbox' checked={ props.checked } onChange={ (): void => props.onChange(!props.checked) } />
+        <label>{ props.label }</label>
     </div>
 );

@@ -35,8 +35,10 @@
       }
     ],
     "indent": "error",
+    "object-curly-spacing": ["error", "always"],
     "sort-imports": ["error", { "ignoreDeclarationSort": true }], // declaration sort handled by "import/order" rule
-    "import/order": "error"
+    "import/order": "error",
+    "react/jsx-curly-spacing": ["error", {"when": "always", "children": true}]
   },
   "globals": {
     "setInterval": true,
