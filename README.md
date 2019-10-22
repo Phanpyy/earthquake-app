@@ -3,7 +3,9 @@ This application shows earthquakes on a map.
 The earthquake data are provided by USGS and are refreshed regularly.
 The longitude and latitude data are used to locate each earthquake's position on the map.
 Also, the magnitude values decide which color to depict each respective earthquake.
-The user can chose, if he wants to refresh the data automatically.  
+The user can chose, if he wants to refresh the data automatically.
+Moreover filter options to filter after most recent earthquakes or the strongest earthquake regarding magnitude value can
+be applied.
 
 ## Prerequisites
 
