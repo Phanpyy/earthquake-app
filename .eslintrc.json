@@ -34,6 +34,7 @@
         "ignoreTemplateLiterals": true
       }
     ],
+    "indent": "error",
     "sort-imports": ["error", { "ignoreDeclarationSort": true }], // declaration sort handled by "import/order" rule
     "import/order": "error"
   },
