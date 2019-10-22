@@ -16,3 +16,15 @@ export default class EarthquakeApi {
     static getEarthquakesToday = (): Promise<Earthquake[]> =>
         axios.get(URL).then((response): Earthquake[] => response.data.features);
 }
+
+/**
+ * Add a response interceptor, all errors go through this interceptor
+ */
+axios.interceptors.response.use(
+    (response): any => {
+        return response;
+    },
+    (error): any => {
+        return Promise.reject(error);
+    },
+);

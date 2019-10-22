@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import ReactTooltip from 'react-tooltip';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css'
 import './App.css';
+import ReactTooltip from 'react-tooltip';
 import EarthquakeApi from './api/EarthquakeApi';
 import Earthquake from './models/Earthquake';
 import MapChart from './components/MapChart';
@@ -14,11 +14,18 @@ const FILTER_NONE = 'filterNone';
 const FILTER_TIME = 'filterTime';
 const FILTER_MAGNITUDE = 'filterMagnitude';
 
-const DROP_DOWN_OPTIONS = [FILTER_NONE, FILTER_TIME, FILTER_MAGNITUDE];
+const FILTER_NONE_TEXT = 'no filter';
+const FILTER_TIME_TEXT = 'filter after most recent';
+const FILTER_MAGNITUDE_TEXT = 'filter after strongest';
+
+const DROP_DOWN_OPTIONS = [
+    {value: FILTER_NONE, label: FILTER_NONE_TEXT},
+    {value: FILTER_TIME, label: FILTER_TIME_TEXT},
+    {value: FILTER_MAGNITUDE, label: FILTER_MAGNITUDE_TEXT}
+];
 
 const EARTHQUAKES_DATA_REFRESH_TEXT = 'Earthquakes data were refreshed.';
 const EARTHQUAKES_DATA_REFRESH_LABEL = 'refresh automatically';
-const OPTION_SELECT_PLACEHOLDER = 'Select an option';
 
 /**
  * Entry point to actual web application.
@@ -27,9 +34,10 @@ const OPTION_SELECT_PLACEHOLDER = 'Select an option';
  */
 const App: React.FC = () => {
     const [earthquakes, setEarthquakes] = useState<Earthquake[]>([]);
-    const [refreshAutomatically, setRefreshAutomatically] = useState<boolean>(true);
+    const [refreshAutomatically, setRefreshAutomatically] = useState<boolean>(false);
     const [toolTipContent, setToolTipContent] = useState<string>('');
-    const [filterOption, setFilerOption] = useState<string>(FILTER_NONE);
+    const [filterOption, setFilterOption] = useState<string>(FILTER_NONE);
+    const [inputFilterNumber, setInputFilterNumber] = useState<number | undefined>(undefined);
 
     /**
      * OnComponentMount - fetch earthquake data
@@ -41,8 +49,24 @@ const App: React.FC = () => {
     useEffect(() => {
         // declare function to fetch data
         const fetchData = async (): Promise<void> => {
-            const earthquakes = await EarthquakeApi.getEarthquakesToday();
-            setEarthquakes(earthquakes);
+            let fetchEarthquakes = await EarthquakeApi.getEarthquakesToday();
+
+            let sorted: Earthquake[];
+            if (filterOption !== FILTER_NONE && inputFilterNumber) {
+                switch (filterOption) {
+                    case FILTER_TIME:
+                        sorted = fetchEarthquakes.sort((ea1, ea2) => ea2.properties.time - ea1.properties.time);
+                        fetchEarthquakes = sorted.slice(0, inputFilterNumber);
+                        break;
+
+                    case FILTER_MAGNITUDE:
+                        sorted = fetchEarthquakes.sort((ea1, ea2) => ea2.properties.mag - ea1.properties.mag);
+                        fetchEarthquakes = sorted.slice(0, inputFilterNumber);
+                        break;
+                }
+            }
+
+            setEarthquakes(fetchEarthquakes);
         };
 
         fetchData();
@@ -56,22 +80,37 @@ const App: React.FC = () => {
             // function is executed, when component will unmount
             return (): void => clearInterval(interval);
         }
-    }, [refreshAutomatically]);
+    }, [refreshAutomatically, filterOption, inputFilterNumber]);
 
     return (
         <div className='App'>
-            <MapChart setTooltipContent={setToolTipContent} earthquakes={earthquakes} />
+            <MapChart setTooltipContent={setToolTipContent} earthquakes={earthquakes}/>
             <ReactTooltip>{toolTipContent}</ReactTooltip>
             <CheckboxAndLabel
                 checked={refreshAutomatically}
                 label={EARTHQUAKES_DATA_REFRESH_LABEL}
                 onChange={setRefreshAutomatically}
             />
-            <Dropdown
-                options={DROP_DOWN_OPTIONS}
-                onChange={(event): void => setFilerOption(event.value)}
-                value={filterOption}
-            />
+            <div style={{flexDirection: 'row'}}>
+                <Dropdown
+                    options={DROP_DOWN_OPTIONS}
+                    onChange={(event): void => setFilterOption(event.value)}
+                    value={filterOption}
+                />
+                {
+                    filterOption !== FILTER_NONE ?
+                        <input
+                            type='text'
+                            pattern='[0-9]*'
+                            value={inputFilterNumber}
+                            onChange={
+                                (event): void =>
+                                    event.target.value ?
+                                        setInputFilterNumber(parseInt(event.target.value))
+                                        : setInputFilterNumber(undefined)}/>
+                        : undefined
+                }
+            </div>
         </div>
     );
 };

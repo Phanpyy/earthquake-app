@@ -1,4 +1,4 @@
-import React, {ReactElement, memo} from 'react';
+import React, {ReactElement, memo, useState} from 'react';
 import {
     ComposableMap,
     Geographies,
@@ -25,7 +25,7 @@ const MAGNITUDE_SCALE_MEDIUM = 2;
 const STROKE_DEFAULT = '#D3D3D3';
 const STROKE_HOVER = '#000000';
 
-const CIRCLE_RADIUS = 7;
+const CIRCLE_RADIUS = 5;
 
 const MAP_COLOR = '#9998A3';
 const MAP_BORDER = '#EAEAEC';
@@ -62,9 +62,37 @@ interface Props {
  * @constructor
  */
 const MapChart: React.FC<Props> = (props: Props) => {
+    const [zoom, setZoom] = useState<number>(1);
+
+    /**
+     * User zooms into land on map.
+     *
+     * @function handleWheel
+     * @param {WheelEvent} event
+     */
+    const handleWheel = (event: WheelEvent): void => {
+        if (event.deltaY > 0) {
+            setZoom(zoom / 1.1)
+        }
+        if (event.deltaY < 0) {
+            setZoom(zoom * 1.1)
+        }
+    };
+
     return (
-        <ComposableMap data-tip='' projectionConfig={{scale: 200}}>
-            <ZoomableGroup>
+        <ComposableMap
+            data-tip=''
+            projectionConfig={{
+                scale: 205
+            }}
+            width={1400}
+            height={560}
+            style={{
+                width: '100%',
+                height: 'auto'
+            }}
+        >
+            <ZoomableGroup center={[0, 20]} zoom={zoom}>
                 <Geographies geography={geoUrl}>
                     {({geographies}: any): ReactElement[] =>
                         geographies.map((geo: any) => (
@@ -73,11 +101,11 @@ const MapChart: React.FC<Props> = (props: Props) => {
                                 geography={geo}
                                 fill={MAP_COLOR}
                                 stroke={MAP_BORDER}
+                                onWheel={handleWheel}
                             />
                         ))
                     }
                 </Geographies>
-
                 {
                     props.earthquakes.map((earthquake) =>(
                         <Marker
