@@ -8,7 +8,7 @@ const REFRESH_INTERVAL = 30000; // 30 seconds
 
 const App: React.FC = () => {
     const [earthquakes, setEarthquakes] = useState<Earthquake[]>([]);
-    const [refreshAutomatically, setRefreshAutomatically] = useState<boolean>(false);
+    const [refreshAutomatically, setRefreshAutomatically] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
@@ -16,15 +16,15 @@ const App: React.FC = () => {
             setEarthquakes(earthquakes);
         };
 
+        fetchData();
+
         if (refreshAutomatically) {
-            const interval = setInterval(async (): Promise<void> => {
-                await fetchData();
+            const interval = setInterval((): void => {
+                fetchData();
             }, REFRESH_INTERVAL);
 
             return (): void => clearInterval(interval);
         }
-
-        fetchData();
     }, [refreshAutomatically]);
 
     return (
@@ -32,7 +32,7 @@ const App: React.FC = () => {
             <header className='App-header'>
                 <img src={logo} className='App-logo' alt='logo'/>
                 <p>
-                    Edit <code>src/App.tsx</code> and save to reloads.
+                    Edit <code>src/App.tsx</code> and save to reload.
                 </p>
                 <a
                     className='App-link'
