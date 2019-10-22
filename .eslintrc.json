@@ -13,7 +13,10 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
   ],
   "plugins": [
     "react",
@@ -30,7 +33,9 @@
         "ignoreUrls": true,
         "ignoreTemplateLiterals": true
       }
-    ]
+    ],
+    "sort-imports": ["error", { "ignoreDeclarationSort": true }], // declaration sort handled by "import/order" rule
+    "import/order": "error"
   },
   "globals": {
     "setInterval": true,
