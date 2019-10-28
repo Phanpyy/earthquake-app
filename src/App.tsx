@@ -6,7 +6,7 @@ import ReactTooltip from 'react-tooltip';
 import EarthquakeApi from './api/EarthquakeApi';
 import Earthquake from './models/Earthquake';
 import MapChart from './components/MapChart';
-import { CheckboxAndLabel } from './components/Checkbox';
+import { CheckboxAndLabel } from './components/CheckboxAndLabel';
 
 const REFRESH_INTERVAL = 30000; // 30 seconds
 
